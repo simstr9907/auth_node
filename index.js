@@ -8,6 +8,34 @@ const app = express();
 
 
 app.use(("/public"),express.static(__dirname + "/public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+
+app.post("/login", function(req, res){
+    console.log(req.body.user);
+    const user = JSON.parse(req.body.user);
+    console.log(user);
+    fs.readFile("./.data/users.json", function(err, data){
+        if(err) throw err;
+        else 
+        {
+            let users = Array.from(JSON.parse(data.toString()));
+            const userExists = users.find(function(u){
+                if(u.email === user.email) return true;
+                
+            });
+            if(userExists === undefined){
+                console.log("Login failed");
+                
+            }
+            else
+            {
+                console.log("user found");
+            }
+
+        }
+    });
+});
 
 app.get("/createuser", function(req,res){
 
